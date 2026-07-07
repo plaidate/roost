@@ -6,6 +6,18 @@ before they hatch. Whoever's lance is higher at the moment of impact wins
 the clash. An original take on the flap-to-fly flying-combat genre, with
 fully procedural 1-bit art (no external image assets).
 
+![screenshot](screenshot.png)
+
+**New here?** Read the [player's manual](MANUAL.md) for the full rules,
+scoring, enemy behaviour, and tips.
+
+## Play it
+
+Grab a prebuilt `Roost.pdx.zip` from the [Releases](../../releases) page (or
+from `dist/`), then sideload it at <https://play.date/account/sideload/> — or
+unzip it and open the `.pdx` in the Playdate Simulator. No dev toolchain
+required.
+
 ## Controls
 
 | Playdate | Action |
@@ -26,6 +38,7 @@ Requires the [Playdate SDK](https://play.date/dev/) with `pdc` on `PATH`
 ```sh
 make        # build Roost.pdx
 make run    # build and open in the Playdate Simulator
+make smoke  # instrumented build (autopilot + datastore heartbeat) for smoke tests
 ```
 
 ## License

@@ -4,6 +4,7 @@
 
 import "CoreLibs/graphics"
 import "CoreLibs/crank"
+import "harness"
 
 local gfx <const> = playdate.graphics
 local snd <const> = playdate.sound
@@ -23,7 +24,7 @@ local PLAYER_MAX_VX <const> = 150
 local LAVA_Y <const> = 230
 local CLASH_MARGIN <const> = 4 -- y difference below which riders bounce
 
-local AUTOPILOT = false -- smoke-test mode: feeds random input
+local AUTOPILOT = SMOKE_BUILD -- smoke-test mode: feeds random input (on in `make smoke`)
 
 -- Dither patterns (8 rows each; 1 bits = white)
 local PAT_50 <const> = { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 }
@@ -420,6 +421,7 @@ end
 
 local function startWave(w)
     wave = w
+    Harness.set("wave", w)
     waveTimer = 0
     deathsThisWave = 0
     eggChain = 0
@@ -464,11 +466,13 @@ local function startGame()
     ptero = nil
     gameOverTimer = 0
     state = "play"
+    Harness.count("games")
     startWave(1)
 end
 
 local function gameOver()
     state = "gameover"
+    Harness.count("gameovers")
     if score > highScore then
         highScore = score
         saveHigh()
@@ -489,6 +493,7 @@ end
 
 local function killEnemy(e, idx)
     table.remove(enemies, idx)
+    Harness.count("kills")
     local t = TIERS[e.tier]
     addScore(t.points)
     addPopup(e.x, e.y - 14, tostring(t.points))
@@ -552,10 +557,10 @@ local function gatherInput()
     end
     local left = playdate.buttonIsPressed(playdate.kButtonLeft)
     local right = playdate.buttonIsPressed(playdate.kButtonRight)
-    local flap = playdate.buttonJustPressed(playdate.kButtonA)
-    if playdate.getCrankTicks(8) ~= 0 then flap = true end
-    local start = playdate.buttonJustPressed(playdate.kButtonA)
-    return left, right, flap, start
+    local aPressed = playdate.buttonJustPressed(playdate.kButtonA)
+    local cranked = playdate.getCrankTicks(8) ~= 0
+    local flap = aPressed or cranked
+    return left, right, flap, aPressed
 end
 
 -- ----------------------------------------------------------------- updates
@@ -930,10 +935,7 @@ end
 
 -- -------------------------------------------------------------- main loop
 
-function playdate.update()
-    frame = frame + 1
-    runPending()
-
+local function tick()
     gfx.clear(gfx.kColorBlack)
 
     if state == "title" then
@@ -955,6 +957,12 @@ function playdate.update()
     end
 end
 
+function playdate.update()
+    frame = frame + 1
+    runPending()
+    Harness.frame(frame, tick)
+end
+
 playdate.getSystemMenu():addMenuItem("restart", function()
     state = "title"
 end)
@@ -962,5 +970,6 @@ end)
 -- ---------------------------------------------------------------- startup
 
 math.randomseed(playdate.getSecondsSinceEpoch())
-playdate.display.setRefreshRate(30)
+playdate.display.setRefreshRate(SMOKE_BUILD and 0 or 30)
+Harness.shotPath = "build/roost-shot.png"
 buildSprites()

@@ -1,3 +1,5 @@
 *.pdx/
 build/
+out/
+results/
 .DS_Store
