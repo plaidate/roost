@@ -1,5 +1,7 @@
 # Roost
 
+> Part of **[plAIdate](https://plaidate.github.io)** — AI-built 1-bit games, ports, and engines for the Playdate.
+
 A 1-bit aerial arcade game for the [Panic Playdate](https://play.date/):
 flap to stay aloft, clash lances with rival fliers, and gather the eggs
 before they hatch. Whoever's lance is higher at the moment of impact wins
