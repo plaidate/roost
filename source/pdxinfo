@@ -1,6 +1,7 @@
 name=Roost
-author=sdwfrost
+author=Simon Frost
 description=Flap to fly, clash lances, collect the eggs — a 1-bit aerial arcade game.
 bundleID=com.sdwfrost.roost
 version=0.1
-buildNumber=1
+buildNumber=2
+imagePath=launcher

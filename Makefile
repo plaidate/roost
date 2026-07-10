@@ -23,7 +23,7 @@ smoke: build/smoke/source
 
 build/smoke/source: $(wildcard source/*)
 	mkdir -p $@ out
-	cp source/* $@/
+	cp -r source/* $@/
 	echo 'SMOKE_BUILD = true' > $@/smokeflag.lua
 
 run: $(GAME).pdx
